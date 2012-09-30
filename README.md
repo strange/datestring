@@ -65,7 +65,8 @@ in `strftime()`[1]. The most notable exception is that meaningful characters
 are not prefixed with a percentage sign (%) in *datestring*.
 
 Characters not matching a conversion specification will be copied to the
-output verbatim. Character specification can be escaped with a backslash (\\).
+output verbatim when formatting and matched against input when parsing.
+Meaningful characters can be escaped with a backslash (\\).
 
 <table>
     <thead>
