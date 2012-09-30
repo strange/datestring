@@ -1,6 +1,6 @@
 -module(datestring_format).
 
--compile([export_all]).
+-export([format/2]).
 
 -include("datestring.hrl").
 

@@ -1,10 +1,22 @@
 -module(datestring_parse).
 
--compile([export_all]).
+-export([parse_date/2, parse_time/2, parse_datetime/2]).
 
 -include("datestring.hrl").
 
 -define(is_num(D), (D >= $0 andalso D =< $9)).
+
+parse_date(Fmt, S) ->
+    case parse(Fmt, S) of
+        {ok, D} -> valid_date(D);
+        Error -> Error
+    end.
+
+parse_time(Fmt, S) ->
+    case parse(Fmt, S) of
+        {ok, D} -> valid_time(D);
+        Error -> Error
+    end.
 
 parse_datetime(Fmt, S) ->
     case parse(Fmt, S) of
@@ -16,18 +28,6 @@ parse_datetime(Fmt, S) ->
             catch 
                 error:{badmatch, Error} -> Error
             end;
-        Error -> Error
-    end.
-
-parse_time(Fmt, S) ->
-    case parse(Fmt, S) of
-        {ok, D} -> valid_time(D);
-        Error -> Error
-    end.
-
-parse_date(Fmt, S) ->
-    case parse(Fmt, S) of
-        {ok, D} -> valid_date(D);
         Error -> Error
     end.
 
