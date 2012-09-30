@@ -211,11 +211,16 @@ parse([$u|_], _, _) -> {error, {no_match, u}};
 parse([$z|_], _, _) -> {error, {no_match, z}};
 parse([$Z|_], _, _) -> {error, {no_match, 'Z'}};
 
-parse([$\\, X|Fmt], [X|Rest], D) ->
-    parse(Fmt, Rest, D);
-parse([X|Fmt], [X|Rest], D) ->
-    parse(Fmt, Rest, D);
-parse(_, _, _) ->
+parse([$\\, A|Fmt], [B|Rest], Date) ->
+    case string:to_upper(A) of
+        B -> parse(Fmt, Rest, Date);
+        _ -> {error, no_match}
+    end;
+parse([X|Fmt], [X|Rest], Date) ->
+    parse(Fmt, Rest, Date);
+parse(Fmt, Rest, _) ->
+    erlang:display(Fmt),
+    erlang:display(Rest),
     {error, no_match}.
 
 offset(Sign, H, M) when is_list(H) -> offset(Sign, list_to_integer(H), M);
@@ -274,6 +279,8 @@ offset_test() ->
 escape_test() ->
     ?assertEqual({ok, {2012, 12, 12}},
         parse_date("\\YY-m-d", "Y2012-12-12")),
+    ?assertEqual({ok, {0, 1, 1}},
+        parse_date("\\Y\\d", "Yd")),
     ok.
 
 'F_test'() ->
