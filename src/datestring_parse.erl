@@ -51,20 +51,21 @@ parse(_, [], _) ->
 parse([], _, _) ->
     {error, no_match};
 
-parse([$Y|Fmt], [N1, N2, N3, N4|Rest], D)
-        when ?is_num(N1), ?is_num(N2), ?is_num(N3), ?is_num(N4)  ->
-    parse(Fmt, Rest, D#date{y = list_to_integer([N1, N2, N3, N4])});
-parse([$y|Fmt], [N1, N2|Rest], D) when ?is_num(N1), ?is_num(N2) ->
-    {{CurrentYear, _, _}, _} = calendar:now_to_datetime(erlang:now()),
-    [P1, P2|_] = integer_to_list(CurrentYear),
-    parse(Fmt, Rest, D#date{y = list_to_integer([P1, P2, N1, N2])});
+parse([$a|Fmt], ?MON ++ Rest, D) -> parse(Fmt, Rest, D);
+parse([$a|Fmt], ?TUE ++ Rest, D) -> parse(Fmt, Rest, D);
+parse([$a|Fmt], ?WED ++ Rest, D) -> parse(Fmt, Rest, D);
+parse([$a|Fmt], ?THU ++ Rest, D) -> parse(Fmt, Rest, D);
+parse([$a|Fmt], ?FRI ++ Rest, D) -> parse(Fmt, Rest, D);
+parse([$a|Fmt], ?SAT ++ Rest, D) -> parse(Fmt, Rest, D);
+parse([$a|Fmt], ?SUN ++ Rest, D) -> parse(Fmt, Rest, D);
 
-parse([$m|Fmt], [N1, N2|Rest], D) when ?is_num(N1), ?is_num(N2) ->
-    parse(Fmt, Rest, D#date{m = list_to_integer([N1, N2])});
-parse([$n|Fmt], [N1, N2|Rest], D) when ?is_num(N1), ?is_num(N2) ->
-    parse(Fmt, Rest, D#date{m = list_to_integer([N1, N2])});
-parse([$n|Fmt], [N1|Rest], D) when ?is_num(N1) ->
-    parse(Fmt, Rest, D#date{m = list_to_integer([N1])});
+parse([$A|Fmt], ?MONDAY ++ Rest, D) -> parse(Fmt, Rest, D);
+parse([$A|Fmt], ?TUESDAY ++ Rest, D) -> parse(Fmt, Rest, D);
+parse([$A|Fmt], ?WEDNESDAY ++ Rest, D) -> parse(Fmt, Rest, D);
+parse([$A|Fmt], ?THURSDAY ++ Rest, D) -> parse(Fmt, Rest, D);
+parse([$A|Fmt], ?FRIDAY ++ Rest, D) -> parse(Fmt, Rest, D);
+parse([$A|Fmt], ?SATURDAY ++ Rest, D) -> parse(Fmt, Rest, D);
+parse([$A|Fmt], ?SUNDAY ++ Rest, D) -> parse(Fmt, Rest, D);
 
 parse([$b|Fmt], ?JAN ++ Rest, D) -> parse(Fmt, Rest, D#date{m = 1});
 parse([$b|Fmt], ?FEB ++ Rest, D) -> parse(Fmt, Rest, D#date{m = 2});
@@ -98,26 +99,6 @@ parse([$e|Fmt], [N1, N2|Rest], D) when ?is_num(N1), ?is_num(N2) ->
     parse(Fmt, Rest, D#date{d = list_to_integer([N1, N2])});
 parse([$e|Fmt], [N1|Rest], D) when ?is_num(N1) ->
     parse(Fmt, Rest, D#date{d = list_to_integer([N1])});
-parse([$o|Fmt], "ST" ++ Rest, D) -> parse(Fmt, Rest, D);
-parse([$o|Fmt], "ND" ++ Rest, D) -> parse(Fmt, Rest, D);
-parse([$o|Fmt], "RD" ++ Rest, D) -> parse(Fmt, Rest, D);
-parse([$o|Fmt], "TH" ++ Rest, D) -> parse(Fmt, Rest, D);
-
-parse([$a|Fmt], ?MON ++ Rest, D) -> parse(Fmt, Rest, D);
-parse([$a|Fmt], ?TUE ++ Rest, D) -> parse(Fmt, Rest, D);
-parse([$a|Fmt], ?WED ++ Rest, D) -> parse(Fmt, Rest, D);
-parse([$a|Fmt], ?THU ++ Rest, D) -> parse(Fmt, Rest, D);
-parse([$a|Fmt], ?FRI ++ Rest, D) -> parse(Fmt, Rest, D);
-parse([$a|Fmt], ?SAT ++ Rest, D) -> parse(Fmt, Rest, D);
-parse([$a|Fmt], ?SUN ++ Rest, D) -> parse(Fmt, Rest, D);
-
-parse([$A|Fmt], ?MONDAY ++ Rest, D) -> parse(Fmt, Rest, D);
-parse([$A|Fmt], ?TUESDAY ++ Rest, D) -> parse(Fmt, Rest, D);
-parse([$A|Fmt], ?WEDNESDAY ++ Rest, D) -> parse(Fmt, Rest, D);
-parse([$A|Fmt], ?THURSDAY ++ Rest, D) -> parse(Fmt, Rest, D);
-parse([$A|Fmt], ?FRIDAY ++ Rest, D) -> parse(Fmt, Rest, D);
-parse([$A|Fmt], ?SATURDAY ++ Rest, D) -> parse(Fmt, Rest, D);
-parse([$A|Fmt], ?SUNDAY ++ Rest, D) -> parse(Fmt, Rest, D);
 
 parse([$H|Fmt], [N1, N2|Rest], D) when ?is_num(N1), ?is_num(N2) ->
     parse(Fmt, Rest, D#date{h = list_to_integer([N1, N2])});
@@ -135,14 +116,17 @@ parse([$l|Fmt], [N1|Rest], D) when ?is_num(N1) ->
 parse([$M|Fmt], [N1, N2|Rest], D) when ?is_num(N1), ?is_num(N2) ->
     parse(Fmt, Rest, D#date{'M' = list_to_integer([N1, N2])});
 
-parse([$S|Fmt], [N1, N2|Rest], D) when ?is_num(N1), ?is_num(N2) ->
-    parse(Fmt, Rest, D#date{s = list_to_integer([N1, N2])});
+parse([$m|Fmt], [N1, N2|Rest], D) when ?is_num(N1), ?is_num(N2) ->
+    parse(Fmt, Rest, D#date{m = list_to_integer([N1, N2])});
+parse([$n|Fmt], [N1, N2|Rest], D) when ?is_num(N1), ?is_num(N2) ->
+    parse(Fmt, Rest, D#date{m = list_to_integer([N1, N2])});
+parse([$n|Fmt], [N1|Rest], D) when ?is_num(N1) ->
+    parse(Fmt, Rest, D#date{m = list_to_integer([N1])});
 
-parse([$u|Fmt], [N1, N2, N3, N4, N5, N6|Rest], D)
-        when ?is_num(N1), ?is_num(N2), ?is_num(N3), ?is_num(N4),
-        ?is_num(N5), ?is_num(N6)  ->
-    U = list_to_integer([N1, N2, N3, N4, N5, N6]),
-    parse(Fmt, Rest, D#date{u = U});
+parse([$o|Fmt], "ST" ++ Rest, D) -> parse(Fmt, Rest, D);
+parse([$o|Fmt], "ND" ++ Rest, D) -> parse(Fmt, Rest, D);
+parse([$o|Fmt], "RD" ++ Rest, D) -> parse(Fmt, Rest, D);
+parse([$o|Fmt], "TH" ++ Rest, D) -> parse(Fmt, Rest, D);
 
 parse([$p|Fmt], "AM" ++ Rest, D) ->
     parse(Fmt, Rest, D#date{meridiem = am});
@@ -152,6 +136,23 @@ parse([$P|Fmt], "A.M." ++ Rest, D) ->
     parse(Fmt, Rest, D#date{meridiem = am});
 parse([$P|Fmt], "P.M." ++ Rest, D) ->
     parse(Fmt, Rest, D#date{meridiem = pm});
+
+parse([$S|Fmt], [N1, N2|Rest], D) when ?is_num(N1), ?is_num(N2) ->
+    parse(Fmt, Rest, D#date{s = list_to_integer([N1, N2])});
+
+parse([$u|Fmt], [N1, N2, N3, N4, N5, N6|Rest], D)
+        when ?is_num(N1), ?is_num(N2), ?is_num(N3), ?is_num(N4),
+        ?is_num(N5), ?is_num(N6)  ->
+    U = list_to_integer([N1, N2, N3, N4, N5, N6]),
+    parse(Fmt, Rest, D#date{u = U});
+
+parse([$Y|Fmt], [N1, N2, N3, N4|Rest], D)
+        when ?is_num(N1), ?is_num(N2), ?is_num(N3), ?is_num(N4)  ->
+    parse(Fmt, Rest, D#date{y = list_to_integer([N1, N2, N3, N4])});
+parse([$y|Fmt], [N1, N2|Rest], D) when ?is_num(N1), ?is_num(N2) ->
+    {{CurrentYear, _, _}, _} = calendar:now_to_datetime(erlang:now()),
+    [P1, P2|_] = integer_to_list(CurrentYear),
+    parse(Fmt, Rest, D#date{y = list_to_integer([P1, P2, N1, N2])});
 
 parse([$z|Fmt], [$+, N1, N2, N3, N4|Rest], D)
         when ?is_num(N1), ?is_num(N2), ?is_num(N3), ?is_num(N4)  ->

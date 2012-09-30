@@ -199,6 +199,12 @@ Meaningful characters can be escaped with a backslash (\\).
             <td>The time as H:M:S (24 hour format) ("23:49:49")</td>
         </tr>
         <tr>
+            <td>u</td>
+            <td>Yes</td>
+            <td>Yes</td>
+            <td>Microseconds, 6 digits with leading zero ("000034")</td>
+        </tr>
+        <tr>
             <td>y</td>
             <td>Yes**</td>
             <td>Yes</td>
@@ -209,12 +215,6 @@ Meaningful characters can be escaped with a backslash (\\).
             <td>Yes</td>
             <td>Yes</td>
             <td>Year including century ("2002", "2012")</td>
-        </tr>
-        <tr>
-            <td>u</td>
-            <td>Yes</td>
-            <td>Yes</td>
-            <td>Microseconds, 6 digits with leading zero ("000034")</td>
         </tr>
         <tr>
             <td>z</td>
