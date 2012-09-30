@@ -219,8 +219,6 @@ parse([$\\, A|Fmt], [B|Rest], Date) ->
 parse([X|Fmt], [X|Rest], Date) ->
     parse(Fmt, Rest, Date);
 parse(Fmt, Rest, _) ->
-    erlang:display(Fmt),
-    erlang:display(Rest),
     {error, no_match}.
 
 offset(Sign, H, M) when is_list(H) -> offset(Sign, list_to_integer(H), M);
