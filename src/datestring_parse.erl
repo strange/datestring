@@ -137,9 +137,8 @@ parse([$S|Fmt], [N1, N2|Rest], D) when ?is_num(N1), ?is_num(N2) ->
 
 parse([$u|Fmt], [N1, N2, N3, N4, N5, N6|Rest], D)
         when ?is_num(N1), ?is_num(N2), ?is_num(N3), ?is_num(N4),
-        ?is_num(N5), ?is_num(N6)  ->
-    U = list_to_integer([N1, N2, N3, N4, N5, N6]),
-    parse(Fmt, Rest, D#date{u = U});
+             ?is_num(N5), ?is_num(N6)  ->
+    parse(Fmt, Rest, D#date{u = list_to_integer([N1, N2, N3, N4, N5, N6])});
 
 parse([$Y|Fmt], [N1, N2, N3, N4|Rest], D)
         when ?is_num(N1), ?is_num(N2), ?is_num(N3), ?is_num(N4)  ->
