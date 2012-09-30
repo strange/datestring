@@ -190,7 +190,7 @@ parse([$Z|Fmt], "SAST" ++ Rest, D) -> parse(Fmt, Rest, D#date{tz = sast});
 
 parse([$a|_], _, _) -> {error, {no_match, a}};
 parse([$A|_], _, _) -> {error, {no_match, 'A'}};
-parse([$v|_], _, _) -> {error, {no_match, b}};
+parse([$b|_], _, _) -> {error, {no_match, b}};
 parse([$B|_], _, _) -> {error, {no_match, 'B'}};
 parse([$d|_], _, _) -> {error, {no_match, d}};
 parse([$e|_], _, _) -> {error, {no_match, e}};
