@@ -8,7 +8,7 @@ in Erlang.
 
 ### Parsing
 
-The `datestring` module exposes four functions for parsing:
+The `datestring` module exposes three functions for parsing:
 
 * `parse_date/2`
 * `parse_time/2`
