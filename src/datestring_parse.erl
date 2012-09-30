@@ -6,6 +6,10 @@
 
 -define(is_num(D), (D >= $0 andalso D =< $9)).
 
+parse_datetime(Fmt, S) when is_binary(Fmt) ->
+    parse_datetime(S, unicode:characters_to_list(Fmt, ?DEFAULT_ENCODING));
+parse_datetime(Fmt, S) when is_binary(S) ->
+    parse_datetime(Fmt, unicode:characters_to_list(S, ?DEFAULT_ENCODING));
 parse_datetime(Fmt, S) ->
     case parse(Fmt, string:to_upper(S), #date{}) of
         {ok, D} ->
@@ -19,6 +23,10 @@ parse_datetime(Fmt, S) ->
         Error -> Error
     end.
 
+parse_time(Fmt, S) when is_binary(Fmt) ->
+    parse_time(S, unicode:characters_to_list(Fmt, ?DEFAULT_ENCODING));
+parse_time(Fmt, S) when is_binary(S) ->
+    parse_time(Fmt, unicode:characters_to_list(S, ?DEFAULT_ENCODING));
 parse_time(Fmt, S) ->
     case parse(Fmt, string:to_upper(S), #date{}) of
         {ok, D} -> valid_time(D);
