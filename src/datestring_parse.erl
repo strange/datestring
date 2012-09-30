@@ -218,7 +218,7 @@ parse([$\\, A|Fmt], [B|Rest], Date) ->
     end;
 parse([X|Fmt], [X|Rest], Date) ->
     parse(Fmt, Rest, Date);
-parse(Fmt, Rest, _) ->
+parse(_, _, _) ->
     {error, no_match}.
 
 offset(Sign, H, M) when is_list(H) -> offset(Sign, list_to_integer(H), M);
@@ -255,6 +255,8 @@ valid_time(H, _, _, _, pm) when H < 1; H > 12 ->
     {error, invalid_time};
 valid_time(H, M, S, U, pm) when H < 12 ->
     valid_time(H + 12, M, S, U, undefined);
+valid_time(H, M, S, U, am) when H =:= 12 ->
+    valid_time(H - 12, M, S, U, undefined);
 valid_time(H, M, S, U, _) ->
     {ok, {{H, M, S}, U}}.
 
@@ -279,6 +281,25 @@ escape_test() ->
         parse_date("\\YY-m-d", "Y2012-12-12")),
     ?assertEqual({ok, {0, 1, 1}},
         parse_date("\\Y\\d", "Yd")),
+    ok.
+
+a_test() ->
+    ?assertEqual({ok, {0, 1, 1}},
+        parse_date("a", "Mon")),
+    ?assertEqual({ok, {0, 1, 1}},
+        parse_date("a", "Tue")),
+    ?assertEqual({ok, {0, 1, 1}},
+        parse_date("a", "Wed")),
+    ?assertEqual({ok, {0, 1, 1}},
+        parse_date("a", "Thu")),
+    ?assertEqual({ok, {0, 1, 1}},
+        parse_date("a", "Fri")),
+    ?assertEqual({ok, {0, 1, 1}},
+        parse_date("a", "Sat")),
+    ?assertEqual({ok, {0, 1, 1}},
+        parse_date("a", "Sun")),
+    ?assertEqual({error, {no_match, a}},
+        parse_date("a", "The")),
     ok.
 
 'F_test'() ->
@@ -310,7 +331,17 @@ escape_test() ->
         parse_date("B", "DEXEMBER")),
     ok.
 
+y_test() ->
+    ?assertEqual({ok, {2012, 1, 1}},
+        parse_date("y", "12")),
+    ok.
+
 misc_test() ->
+    ?assertEqual({ok, {2012, 2, 29}},
+        parse_date("Y-m-d", "2012-02-29")),
+    ?assertEqual({error, invalid_date},
+        parse_date("Y-m-d", "2011-02-29")),
+
     ?assertEqual({ok, {2012, 12, 12}},
         parse_date("Y-m-d", "2012-12-12")),
     ?assertEqual({ok, {2012, 1, 31}},
@@ -318,6 +349,24 @@ misc_test() ->
     ?assertEqual({ok, {2012, 1, 31}},
         parse_date("\\YY-m-dƺ", "Y2012-01-31ƺ")),
     ok.
+
+am_pm_test() ->
+    ?assertEqual({ok, {{0,0,0}, 0}},
+        parse_time("H:M", "00:00")),
+    ?assertEqual({ok, {{0,0,0}, 0}},
+        parse_time("I:M p", "12:00 AM")),
+    ?assertEqual({ok, {{12,0,0}, 0}},
+        parse_time("I:M p", "12:00 PM")),
+    ?assertEqual({ok, {{13,0,0}, 0}},
+        parse_time("I:M p", "01:00 PM")),
+    ?assertEqual({ok, {{1,0,0}, 0}},
+        parse_time("I:M p", "01:00 AM")),
+    ?assertEqual({ok, {{14,0,0}, 0}},
+        parse_time("I:M p", "02:00 PM")),
+    ?assertEqual({ok, {{2,0,0}, 0}},
+        parse_time("I:M p", "02:00 AM")),
+    ok.
+
 
 iso_formats_test() ->
     ?assertEqual({ok, {2000, 12, 21}},

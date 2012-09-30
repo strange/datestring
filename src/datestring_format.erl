@@ -106,10 +106,11 @@ remove_century([N1, N2]) -> [N1, N2];
 remove_century([_, N2, N3]) -> [N2, N3];
 remove_century([_, _, N3, N4]) -> [N3, N4].
 
-am_or_pm(H) when H > 12 -> pm;
+am_or_pm(H) when H >= 12 -> pm;
 am_or_pm(_) -> am.
 
 twelve_hour_format(H) when H > 12 -> H - 12;
+twelve_hour_format(H) when H =:= 0 -> 12;
 twelve_hour_format(H) -> H.
 
 ord_suffix(1) -> "st";
@@ -177,6 +178,14 @@ format_test() ->
     ?assertEqual({ok, "1999-09-09"}, format("F", {1999, 9, 9})),
 
     ?assertEqual({ok, "12:30"}, format("R", {{12, 30, 59}, 0})),
+    ?assertEqual({ok, "23:30:59"}, format("T", {{23, 30, 59}, 0})),
+
+    ?assertEqual({ok, "12:30 PM"}, format("H:M p", {{12, 30, 59}, 0})),
+    ?assertEqual({ok, "12:30 AM"}, format("I:M p", {{0, 30, 59}, 0})),
+    ?assertEqual({ok, "01:30 PM"}, format("I:M p", {{13, 30, 59}, 0})),
+    ?assertEqual({ok, "11:30 PM"}, format("I:M p", {{23, 30, 59}, 0})),
+    ?assertEqual({ok, "01:30 AM"}, format("I:M p", {{1, 30, 59}, 0})),
+
     ?assertEqual({ok, "23:30:59"}, format("T", {{23, 30, 59}, 0})),
 
     ?assertEqual({ok, "Thu, 21 Dec 2000 16:01:07"},
