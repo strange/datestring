@@ -6,12 +6,8 @@
 
 -define(is_num(D), (D >= $0 andalso D =< $9)).
 
-parse_datetime(Fmt, S) when is_binary(Fmt) ->
-    parse_datetime(S, unicode:characters_to_list(Fmt, ?DEFAULT_ENCODING));
-parse_datetime(Fmt, S) when is_binary(S) ->
-    parse_datetime(Fmt, unicode:characters_to_list(S, ?DEFAULT_ENCODING));
 parse_datetime(Fmt, S) ->
-    case parse(Fmt, string:to_upper(S), #date{}) of
+    case parse(Fmt, S) of
         {ok, D} ->
             try
                 {ok, Date} = valid_date(D),
@@ -23,25 +19,24 @@ parse_datetime(Fmt, S) ->
         Error -> Error
     end.
 
-parse_time(Fmt, S) when is_binary(Fmt) ->
-    parse_time(S, unicode:characters_to_list(Fmt, ?DEFAULT_ENCODING));
-parse_time(Fmt, S) when is_binary(S) ->
-    parse_time(Fmt, unicode:characters_to_list(S, ?DEFAULT_ENCODING));
 parse_time(Fmt, S) ->
-    case parse(Fmt, string:to_upper(S), #date{}) of
+    case parse(Fmt, S) of
         {ok, D} -> valid_time(D);
         Error -> Error
     end.
 
-parse_date(Fmt, S) when is_binary(Fmt) ->
-    parse_date(S, unicode:characters_to_list(Fmt, ?DEFAULT_ENCODING));
-parse_date(Fmt, S) when is_binary(S) ->
-    parse_date(Fmt, unicode:characters_to_list(S, ?DEFAULT_ENCODING));
-parse_date(Fmt, S) when is_list(S), is_list(Fmt) ->
-    case parse(Fmt, string:to_upper(S), #date{}) of
+parse_date(Fmt, S) ->
+    case parse(Fmt, S) of
         {ok, D} -> valid_date(D);
         Error -> Error
     end.
+
+parse(Fmt, S) when is_binary(Fmt) ->
+    parse(S, unicode:characters_to_list(Fmt, ?DEFAULT_ENCODING));
+parse(Fmt, S) when is_binary(S) ->
+    parse(Fmt, unicode:characters_to_list(S, ?DEFAULT_ENCODING));
+parse(Fmt, S) ->
+    parse(Fmt, string:to_upper(S), #date{}).
 
 parse([], [], D) ->
     {ok, D};
@@ -366,7 +361,6 @@ am_pm_test() ->
     ?assertEqual({ok, {{2,0,0}, 0}},
         parse_time("I:M p", "02:00 AM")),
     ok.
-
 
 iso_formats_test() ->
     ?assertEqual({ok, {2000, 12, 21}},
