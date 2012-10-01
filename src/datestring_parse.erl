@@ -344,7 +344,7 @@ misc_test() ->
         parse_date("\\YY-m-dƺ", "Y2012-01-31ƺ")),
     ok.
 
-am_pm_test() ->
+time_test() ->
     ?assertEqual({ok, {{0,0,0}, 0}},
         parse_time("H:M", "00:00")),
     ?assertEqual({ok, {{0,0,0}, 0}},
@@ -359,6 +359,14 @@ am_pm_test() ->
         parse_time("I:M p", "02:00 PM")),
     ?assertEqual({ok, {{2,0,0}, 0}},
         parse_time("I:M p", "02:00 AM")),
+    ?assertEqual({error, invalid_time},
+        parse_time("H:M", "24:00")),
+    ?assertEqual({error, invalid_time},
+        parse_time("I:M p", "13:00 PM")),
+    ?assertEqual({error, invalid_time},
+        parse_time("H:M", "23:61")),
+    ?assertEqual({error, invalid_time},
+        parse_time("H:M:S", "23:59:61")),
     ok.
 
 iso_formats_test() ->
