@@ -24,7 +24,7 @@ parse_datetime(Fmt, S) ->
             try
                 {ok, Date} = valid_date(D),
                 {ok, Time} = valid_time(D),
-                {ok, Date, Time}
+                {ok, {Date, Time}}
             catch 
                 error:{badmatch, Error} -> Error
             end;
@@ -372,9 +372,9 @@ iso_formats_test() ->
     ?assertEqual({ok, {{16, 01, 07}, 0}},
         parse_time("a, d b Y H:M:S z", "Thu, 21 Dec 2000 16:01:07 +0200")),
 
-    ?assertEqual({ok, {2008, 1, 2}, {{10,30,0}, 123}},
+    ?assertEqual({ok, {{2008, 1, 2}, {{10,30,0}, 123}}},
         parse_datetime("Y-m-dTH:M:S.uz", "2008-01-02T10:30:00.000123+02:00")),
-    ?assertEqual({ok, {2000, 12, 21}, {{16, 01, 07}, 0}},
+    ?assertEqual({ok, {{2000, 12, 21}, {{16, 01, 07}, 0}}},
         parse_datetime("a, d b Y H:M:S z", "Thu, 21 Dec 2000 16:01:07 +0200")),
     ok.
 

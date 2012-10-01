@@ -26,7 +26,7 @@ Examples:
 
     {ok,{{23,12,0},0}} = datestring:parse_time("I:M P", "11:12 p.m.").
 
-    {ok,{2012,12,24},{{23,12,0},0}} =
+    {ok,{{2012,12,24},{{23,12,0},0}}} =
         datestring:parse_datetime("Y-m-d H:M", "2012-12-24 23:12").
 
     {error,invalid_date} = datestring:parse_date("Y-m-d", "2012-13-24").
