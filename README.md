@@ -1,5 +1,5 @@
-`datestring` - Parse and Format Date and Time in Erlang
-=======================================================
+Parse and Format Date and Time in Erlang
+========================================
 
 This library implements basic functionality to parse and format date and time
 in Erlang.
